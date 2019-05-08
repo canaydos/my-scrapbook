@@ -1,5 +1,4 @@
 # my-scrapbook
-Code
 
 int motorPin1 = 7;
 int motorPin2 = 8;

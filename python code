@@ -1,0 +1,240 @@
+# my-scrapbook
+
+import turtle
+import time
+import random
+
+delay = 0.1
+
+score=0
+high_score=0
+
+windows = turtle.Screen()
+windows.title("electronics project")
+windows.bgcolor("yellow")
+windows.setup(width=1000, height=600)
+windows.tracer(0)
+
+head =turtle.Turtle()
+head.speed(0)
+head.shape("square")
+head.color("black")
+head.penup()
+head.goto(0,0)
+head.direction = "stop"
+
+food =turtle.Turtle()
+food.shapesize(0.5)
+food.speed(0)
+food.shape("turtle")
+food.color("blue")
+food.penup()
+food.goto(100,0)
+
+food1 =turtle.Turtle()
+food1.shapesize(1)
+food1.speed(0)
+food1.shape("turtle")
+food1.color("green")
+food1.penup()
+food1.goto(0,-100)
+
+food2 =turtle.Turtle()
+food2.shapesize(2)
+food2.speed(0)
+food2.shape("turtle")
+food2.color("red")
+food2.penup()
+food2.goto(0,100)
+
+food3 =turtle.Turtle()
+food3.shapesize(3)
+food3.speed(0)
+food3.shape("circle")
+food3.color("black")
+food3.penup()
+food3.goto(random.randint(-460,460),random.randint(-260,260))
+
+segments = []
+
+pen = turtle.Turtle()
+pen.speed(0)
+pen.shape("square")
+pen.color("black")
+pen.penup()
+pen.pensize()
+pen.hideturtle()
+pen.goto(-200,-280)
+pen.write("Score :0  High Score :0", align="center", font=("Courier",24,"normal"))
+
+def go_up():
+    if head.direction !="down":
+        head.direction = "up"
+
+def go_down():
+    if head.direction != "up":
+        head.direction = "down"
+
+def go_right():
+    if head.direction != "left":
+        head.direction = "right"
+
+def go_left():
+    if head.direction != "right":
+        head.direction = "left"
+
+def move():
+    if head.direction == "up":
+       y = head.ycor()
+       head.sety(y + 20)
+
+    if head.direction == "down":
+       y = head.ycor()
+       head.sety(y - 20)
+
+    if head.direction == "left":
+       x = head.xcor()
+       head.setx(x - 20)
+
+    if head.direction == "right":
+       x = head.xcor()
+       head.setx(x + 20)
+
+windows.listen()
+windows.onkeypress(go_up,"Up")
+windows.onkeypress(go_down,"Down")
+windows.onkeypress(go_right,"Right")
+windows.onkeypress(go_left,"Left")
+
+while True:
+    windows.update()
+
+    if head.xcor()>460 or head.xcor()<-460 or head.ycor()>280 or head.ycor()<-280:
+        time.sleep(1)
+        head.goto(0,0)
+        head.direction = "stop"
+
+        for segment in segments:
+            segment.goto(1000, 1000)
+
+        segments.clear()
+        score = 0
+        pen.clear()
+        pen.write("Score: {}    High Score: {}".format(score, high_score), align="center",font=("Courier", 18, "normal"))
+
+    if head.distance(food)< 20:
+        x = random.randint(-460,460)
+        y = random.randint(-280,280)
+        food.goto(x,y)
+
+        new_segment = turtle.Turtle()
+        new_segment.shapesize(stretch_len=1)
+        new_segment.speed(0)
+        new_segment.shape("square")
+        new_segment.color("grey")
+        head.color("blue")
+        food3.color("blue")
+        new_segment.penup()
+        segments.append(new_segment)
+
+#increase the score
+        score += 10
+
+        if score > high_score:
+            high_score = score
+
+        pen.clear()
+        pen.write("Score: {}    High Score: {}".format(score, high_score), align="center",font=("Courier", 18, "normal"))
+
+    if head.distance(food1) < 20:
+        x = random.randint(-460, 460)
+        y = random.randint(-280, 280)
+        food1.goto(x, y)
+
+        new_segment1 = turtle.Turtle()
+        new_segment1.shapesize(stretch_len=1)
+        new_segment1.speed(0)
+        new_segment1.shape("square")
+        new_segment1.color("grey")
+        food3.color("green")
+        head.color("green")
+        new_segment1.penup()
+        segments.append(new_segment1)
+
+            # increase the score
+        score += 20
+
+        if score > high_score:
+            high_score = score
+
+        pen.clear()
+        pen.write("Score: {}    High Score: {}".format(score, high_score), align="center",font=("Courier", 18, "normal"))
+
+    if head.distance(food2)< 20:
+        x = random.randint(-460, 460)
+        y = random.randint(-280, 280)
+        food2.goto(x, y)
+
+        new_segment2 = turtle.Turtle()
+        new_segment2.shapesize(stretch_len=1)
+        new_segment2.speed(0)
+        new_segment2.shape("square")
+        new_segment2.color("grey")
+        head.color("red")
+        food3.color("red")
+        new_segment2.penup()
+        segments.append(new_segment2)
+
+        score += 30
+
+        if score > high_score:
+            high_score = score
+
+        pen.clear()
+        pen.write("Score: {}    High Score: {}".format(score, high_score), align="center",font=("Courier", 18, "normal"))
+
+    if head.distance(food3) < 40:
+        time.sleep(1)
+        head.goto(0,0)
+        head.direction = "stop"
+
+        for segment in segments:
+            segment.goto(1000, 1000)
+
+        segments.clear()
+        score = 0
+        pen.clear()
+        pen.write("Score: {}    High Score: {}".format(score, high_score), align="center",font=("Courier", 18, "normal"))
+
+    #move the end segments first in reverse order
+
+    for index in range(len(segments)-1 , 0 , -1):
+        x = segments[index-1].xcor()
+        y = segments[index-1].ycor()
+        segments[index].goto(x,y)
+
+# move segment 0 to  where the head is
+    if len(segments) > 0:
+        x = head.xcor()
+        y = head.ycor()
+        segments[0].goto(x,y)
+
+    move()
+
+    for segment in segments:
+        if segment.distance(head) < 20:
+            time.sleep(1)
+            head.goto(0,0)
+            head.direction = "stop"
+
+            for segment in segments:
+                segment.goto(1000, 1000)
+
+            segments.clear()
+
+            score = 0
+            pen.clear()
+
+    time.sleep(delay)
+
+windows.mainloop()

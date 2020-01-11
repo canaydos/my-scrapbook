@@ -1,0 +1,29 @@
+pkg load control
+%clc
+clear all
+g=9.81; m=10000; f=0.4; rho=1.202; A=3; Cd=1.5; u0=20; uw=2;
+Fx0 = 292.59
+Theta=pi/6 % Not use Radian here
+Fthrottle = Fx0 - m*g*sin(Theta) - f*m*g*cos(Theta) - 0.5*rho*A*Cd*(u0+uw)^2;
+Fbreak    = Fx0 + m*g*sin(Theta) - f*m*g*cos(Theta) - 0.5*rho*A*Cd*(u0+uw)^2;
+if(Theta>0)
+  Fthrottle
+elseif(Theta<0) 
+  Fbreak
+else
+  Fbreak
+  Fthrottle
+endif; 
+Tau=(m/(rho*A*Cd*(u0+uw))); K=Tau/m;
+Kd = 10  ;
+Ki = 100 ;
+Kp = 600 ;           
+% Kp decreases rise time
+
+t=[0:0.1:100];
+Num=K*[Kd Kp Ki];
+Den=[Tau 1 0]+ K*[Kd Kp Ki];
+sys= tf(Num,Den);
+yc= step(sys, t);
+%plot(t,yc,'r'); xlabel('Time (sec)'),grid; 
+%title('Unit Step Reference Response');

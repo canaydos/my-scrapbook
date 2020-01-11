@@ -1,0 +1,19 @@
+pkg load control
+clc
+clear all
+g=9.81; m=1000; f=0.015 ; Theta=0; rho=1.202; A=1; Cd=0.5; u0=20; uw=2;
+Fx0 = m*g*sin(Theta) + f*m*g*cos(Theta) + 0.5*rho*A*Cd*(u0+uw)^2
+%V=sqrt(2*(Fx0-m*g*sin(Theta)-f*m*g*cos(Theta))/(rho*A*Cd));
+Tau=(m/(rho*A*Cd*(u0+uw))); K=Tau/m;
+Kd = 10                
+Ki = 10                
+Kp = 600            
+% Kp decreases rise time
+
+t=[0:0.5:30];
+Num=K*[Kd Kp Ki];
+Den=[Tau 1 0]+ K*[Kd Kp Ki];
+sys= tf(Num,Den);
+yc= step(sys, t);
+plot(t,yc,'r'); xlabel('Time (sec)'),grid; 
+title('Unit Step Reference Response');

@@ -1,0 +1,23 @@
+pkg load control
+clc
+clear all
+g=9.81; m=1000; f=0.015 ; Theta=0; rho=1.202; A=1; Cd=0.5; u0=20; uw=2;
+%V=sqrt(2*(Fx0-m*g*sin(Theta)-f*m*g)/(rho*A*Cd))
+Fx0 = m*g*sin(Theta) + f*m*g + 0.5*rho*A*Cd*(u0+uw)^2;
+Tau=(m/(rho*A*Cd*(u0+uw))); K=Tau/m; % K=>gain Tau=>Time constant
+Ki=42.93; Kp=401; %Kd=600;
+t=[0:0.1:100];
+Num=K*[Kp Ki];
+Den=[Tau (K*Kp+1) K*Ki];
+Num_d=[K 0];
+Den_d=[Tau (K*Kp+1) K*Ki];
+      
+sys= tf(Num,Den);
+yc= step(sys, t);
+plot(t,yc,'r'); xlabel('Time (sec)'),grid; 
+title('Unit Step Reference Response');
+
+%sys_d=tf(Num_d,Den_d);
+%ycd=step(sys_d,t);
+%plot(t,ycd,'b'); xlabel('Time (sec)'),grid;
+%title('Unit Step Disturbance Response'); 
